@@ -26,7 +26,6 @@ function atacar() {
 function defender() {
   defendendo = true;
   logBatalha("O gorila está se defendendo e receberá menos dano no próximo turno!");
-  salvarEstado();
   humanosAtacam();
 }
 
@@ -41,7 +40,7 @@ function humanosAtacam() {
   somAtaque.currentTime = 0;
   somAtaque.play();
 
-  logBatalha(`🧍‍♂️ ${vivos} humanos atacaram e causaram ${danoFinal} de dano!`);
+  logBatalha(`${vivos} humanos atacaram e causaram ${danoFinal} de dano!`);
   atualizarDOM();
 }
 
@@ -71,4 +70,5 @@ window.onload = () => {
   atualizarDOM();
 
   document.getElementById('btn-atacar').addEventListener('click', atacar);
+  document.getElementById('btn-defender').addEventListener('click', defender);
 };
