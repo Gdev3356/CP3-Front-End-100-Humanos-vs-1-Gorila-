@@ -40,9 +40,13 @@ header {
   filter: grayscale(100%);
 }
 
+#gorila.ataque-gorila {
+  animation: gorilaAvancaVolta 0.4s ease forwards;
+}
+
 @keyframes gorilaAvancaVolta {
   0% { transform: translateX(0); }
-  50% { transform: translateX(50px); }
+  50% { transform: translateX(-50px); }
   100% { transform: translateX(0); }
 }
 

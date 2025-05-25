@@ -6,13 +6,13 @@ const somMataHumano = document.getElementById('som-mata-humano');
 
 function atacar() {
   const gorila = document.getElementById('gorila');
-  gorila.classList.add('ataque-gorila');
-  setTimeout(() => gorila.classList.remove('ataque-gorila'), 400);
   let atacados = 5;
   for (let i = 0; i < humanos.length && atacados > 0; i++) {
     if (humanos[i].vivo) {
       somMataHumano.currentTime = 0;
       somMataHumano.play();
+      gorila.classList.add('ataque-gorila');
+      setTimeout(() => gorila.classList.remove('ataque-gorila'), 400);
       humanos[i].vivo = false;
       atacados--;
     }
