@@ -160,21 +160,27 @@ function iniciarAtaqueAutomatico() {
 
 
 function atualizarDOM() {
+  const vivos = humanos.filter(h => h.vivo).length;
+
   document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
-  document.getElementById('humanos-restantes').textContent = humanos.filter(h => h.vivo).length;
-  document.getElementById('curas-restantes').textContent = curasRestantes;
   document.getElementById('energia-gorila').textContent = energiaGorila;
+  document.getElementById('curas-restantes').textContent = curasRestantes;
+  document.getElementById('humanos-restantes').textContent = vivos;
+
+  document.getElementById('barra-vida').style.width = `${vidaGorila}%`;
+  document.getElementById('barra-energia').style.width = `${(energiaGorila / 120) * 100}%`;
+  document.getElementById('barra-humanos').style.width = `${vivos}%`;
 
   const container = document.getElementById('humanos');
   container.innerHTML = '';
   humanos.forEach(h => {
     const img = document.createElement('img');
-    img.src = 'assets/humano.png';
-    if (!h.vivo) img.classList.add('morto');
     img.src = h.armado ? 'assets/humano-armado.png' : 'assets/humano.png';
+    if (!h.vivo) img.classList.add('morto');
     container.appendChild(img);
   });
 }
+
 
 function logBatalha(mensagem) {
   const logDiv = document.getElementById('log-batalha');

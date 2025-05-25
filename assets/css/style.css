@@ -68,10 +68,74 @@ header {
   border-radius: 20px;
 }
 
-.status-bar {
-  margin-top: 15px;
-  font-size: 1.2em;
+.status-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 15px;
+  gap: 30px;
 }
+
+.status-gorila,
+.status-humanos {
+  flex: 1;
+  max-width: 300px;
+}
+
+.barra-container {
+  margin-bottom: 15px;
+  font-family: sans-serif;
+}
+
+.barra-externa {
+  background-color: #ddd;
+  width: 100%;
+  height: 20px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.barra-interna {
+  height: 100%;
+  background-color: green;
+  width: 100%;
+  transition: width 0.3s ease;
+}
+
+.barra-interna.energia {
+  background-color: orange;
+}
+
+.barra-interna.humanos {
+  background-color: red;
+}
+
+.status-gorila,
+.status-humanos {
+  background-color: #f5f5f5;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border: 2px solid #ccc;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  width: 100%;
+}
+
+.status-gorila {
+  background-color: #ffffff;
+}
+
+.status-humanos {
+  background-color: #ffffff;
+}
+
+.barra-container label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
 
 footer{
     display: flex;

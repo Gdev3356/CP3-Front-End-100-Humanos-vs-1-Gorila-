@@ -10,13 +10,38 @@
   <header>
     <h1>1 Gorila vs 100 Humanos</h1>
   </header>
+  
+  <div class="status-container">
+    <div class="status-gorila">
+        <div class="barra-container">
+        <label>Vida do Gorila: <span id="vida-gorila">100</span></label>
+        <div class="barra-externa">
+            <div id="barra-vida" class="barra-interna"></div>
+        </div>
+        </div>
+        
+        <div class="barra-container">
+        <label>Energia: <span id="energia-gorila">120</span></label>
+        <div class="barra-externa">
+            <div id="barra-energia" class="barra-interna energia"></div>
+        </div>
+        </div>
 
-  <section class="status-bar">
-    <p>Vida do Gorila: <span id="vida-gorila">100</span></p>
-    <p>Energia: <span id="energia-gorila">120</span></p>
-    <p>Bananas restantes: <span id="curas-restantes">3</span></p>
-    <p>Humanos restantes: <span id="humanos-restantes">100</span></p>
-  </section>
+        <div class="barra-container">
+        <label>Bananas restantes: <span id="curas-restantes">4</span></label>
+        </div>
+    </div>
+
+
+    <div class="status-humanos">
+        <div class="barra-container">
+        <label>Humanos restantes: <span id="humanos-restantes">100</span></label>
+        <div class="barra-externa">
+            <div id="barra-humanos" class="barra-interna humanos"></div>
+        </div>
+        </div>
+    </div>
+    </div>
 
   <section class="battlefield">
     <img id="gorila" src="assets/gorila.png" alt="Gorila" />
