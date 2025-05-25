@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>1 Gorila vs 100 Humanos</title>
-  <link rel="stylesheet" href="css/style.css"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>1 Gorila vs 100 Humanos</title>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="js/script.js"></script>
 </head>
 <body>
     <header>
         <h1>1 Gorila vs 100 Humanos</h1>
     </header>
+    <section class="status-bar">
+    <p>Vida do Gorila: <span id="vida-gorila">100</span></p>
+    <p>Humanos restantes: <span id="humanos-restantes">100</span></p>
+    </section>
 
+    <section class="campo-de-batalha">
+        <img id="humanos" src="assets/humano.png" alt = "Humano"/>
+        <img id="gorila" src="assets/gorila.png" alt="Gorila" />   
+    </section>
+    
 </body>
 </html>

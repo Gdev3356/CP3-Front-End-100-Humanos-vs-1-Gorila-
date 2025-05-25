@@ -4,18 +4,7 @@ body {
   color: #222;
 }
 
-.battlefield img {
+.campo-de-batalha img {
   width: 150px;
 }
 
-.humanos-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-}
-
-.humanos-container div {
-  width: 10px;
-  height: 10px;
-  background: red;
-}
