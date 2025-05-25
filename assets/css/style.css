@@ -1,0 +1,21 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background: #eef2f1;
+  color: #222;
+}
+
+.battlefield img {
+  width: 150px;
+}
+
+.humanos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.humanos-container div {
+  width: 10px;
+  height: 10px;
+  background: red;
+}
