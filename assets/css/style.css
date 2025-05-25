@@ -52,6 +52,7 @@ header {
   margin: 10px;
   font-size: 16px;
   cursor: pointer;
+  border-radius: 10px;
 }
 
 .log-section {
@@ -64,6 +65,7 @@ header {
   height: 200px;
   overflow-y: auto;
   text-align: left;
+  border-radius: 20px;
 }
 
 .status-bar {

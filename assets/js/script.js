@@ -147,6 +147,7 @@ function desativarBotoes() {
   document.getElementById('btn-atacar').disabled = true;
   document.getElementById('btn-defender').disabled = true;
   document.getElementById('btn-curar').disabled = true;
+  document.getElementById('btn-reiniciar').style.display = 'block';
 }
 
 function salvarEstado() {
@@ -165,7 +166,7 @@ function carregarEstado() {
 
 function verificarFimDeJogo() {
   const vivos = humanos.filter(h => h.vivo).length;
-
+  
   if (vidaGorila <= 0) {
     logBatalha("O gorila foi derrotado!");
     alert("Fim de jogo: os humanos venceram!");
@@ -179,13 +180,33 @@ function verificarFimDeJogo() {
   }
 }
 
+function reiniciarJogo() {
+  vidaGorila = 100;
+  curasRestantes = 4;
+  defendendo = false;
+
+  humanos = Array.from({ length: 100 }, () => ({ vivo: true, armado: false }));
+
+  salvarEstado();
+  atualizarDOM();
+  document.getElementById('log-batalha').innerHTML = '';
+  document.getElementById('btn-reiniciar').style.display = 'none';
+  document.getElementById('btn-atacar').disabled = false;
+  document.getElementById('btn-defender').disabled = false;
+  document.getElementById('btn-curar').disabled = false;
+
+  clearInterval(ataqueAutomatico);
+  iniciarAtaqueAutomatico();
+}
+
 window.onload = () => {
   atualizarDOM();
   carregarEstado();
-  
+
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
   document.getElementById('btn-curar').addEventListener('click', curar);
+  document.getElementById('btn-reiniciar').addEventListener('click', reiniciarJogo);
 
   iniciarAtaqueAutomatico();
 };
