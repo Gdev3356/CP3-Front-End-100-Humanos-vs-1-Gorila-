@@ -1,1 +1,21 @@
 document.getElementById('btn-atacar').addEventListener('click', atacar);
+let humanos = Array.from({ length: 100 }, () => ({ vivo: true }));
+
+function atacar() {
+  let atacados = 5;
+  for (let i = 0; i < humanos.length && atacados > 0; i++) {
+    if (humanos[i].vivo) {
+      humanos[i].vivo = false;
+      atacados--;
+    }
+  }
+
+  logBatalha("🦍 O gorila atacou e eliminou até 5 humanos!");
+}
+
+  function logBatalha(mensagem) {
+  const logDiv = document.getElementById('log-batalha');
+  const novaMsg = document.createElement('p');
+  novaMsg.textContent = mensagem;
+  logDiv.prepend(novaMsg);
+}
