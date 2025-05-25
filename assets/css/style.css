@@ -8,7 +8,7 @@ body {
 }
 
 header {
-  background-color: #2f4f4f;
+  background-color: #002f6d;
   color: white;
   padding: 20px;
 }
@@ -48,5 +48,18 @@ header {
   0% { transform: translateX(0); }
   50% { transform: translateX(-50px); }
   100% { transform: translateX(0); }
+}
+
+footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #002f6d;
+    padding: 15px;
+    height: 10vh;
+    width: auto;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: #eef2f1;
 }
 
