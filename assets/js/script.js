@@ -8,29 +8,36 @@ const somMataHumano = document.getElementById('som-mata-humano');
 const somCura = document.getElementById('som-cura');
 
 function atacar() {
-  const gorila = document.getElementById('gorila');
-  let atacados = 5;
-  for (let i = 0; i < humanos.length && atacados > 0; i++) {
-    if (humanos[i].vivo) {
-      somMataHumano.currentTime = 0;
-      somMataHumano.play();
-      gorila.classList.add('ataque-gorila');
-      setTimeout(() => gorila.classList.remove('ataque-gorila'), 400);
-      humanos[i].vivo = false;
-      atacados--;
-    }
-  }
+  somMataHumano.currentTime = 0;
+  somMataHumano.play();
 
-  logBatalha("O gorila atacou e eliminou até 5 humanos!");
+  const gorila = document.getElementById('gorila');
+  gorila.classList.add('ataque-gorila');
+  setTimeout(() => gorila.classList.remove('ataque-gorila'), 400);
+
+  let mortos = 0;
+  let esquivaram = 0;
+  const vivos = humanos.filter(h => h.vivo);
+  const chanceBase = 0.3;
+  const chanceEsquiva = chanceBase * (vivos.length / 100);
+
+  vivos.forEach(h => {
+    if (Math.random() < chanceEsquiva) {
+      esquivaram++;
+      return;
+    }
+    h.vivo = false;
+    mortos++;
+  });
+
+  logBatalha(`O gorila atacou! ${mortos} humanos foram eliminados. ${esquivaram} esquivaram!`);
   atualizarDOM();
-  humanosAtacam();
   verificarFimDeJogo();
 }
 
 function defender() {
   defendendo = true;
   logBatalha("O gorila está se defendendo e receberá menos dano no próximo turno!");
-  humanosAtacam();
 }
 
 function curar() {
@@ -46,15 +53,16 @@ function curar() {
 
   logBatalha(`O gorila se curou em ${cura} pontos de vida. (${curasRestantes} bananas restantes)`);
   atualizarDOM();
-  humanosAtacam();
 }
 
 function humanosAtacam() {
   const vivos = humanos.filter(h => h.vivo).length;
   if (vivos === 0) return;
 
-  const dano = Math.floor(Math.random() * vivos * 0.2);
-  const danoFinal = defendendo ? Math.floor(dano / 2) : dano;
+  const variacao = Math.random() * 0.2 + 0.9;
+  const danoBase = vivos * 0.3;
+  const danoComVariacao = Math.round(danoBase * variacao);
+  const danoFinal = defendendo ? Math.floor(danoComVariacao / 2) : danoComVariacao;
   vidaGorila -= danoFinal;
   defendendo = false;
   somAtaque.currentTime = 0;
