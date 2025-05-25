@@ -1,10 +1,44 @@
 body {
-  font-family: 'Arial', sans-serif;
-  background: #eef2f1;
+  font-family: Arial, sans-serif;
+  background-color: #eef2f1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
   color: #222;
 }
 
-.campo-de-batalha img {
-  width: 150px;
+header {
+  background-color: #2f4f4f;
+  color: white;
+  padding: 20px;
 }
+
+
+
+.battlefield {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+  flex-direction: column;
+}
+
+#gorila {
+  width: 120px;
+}
+
+.humanos-container img {
+  width: 40px;
+  height: 40px;
+  margin: 2px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.humanos-container img.morto {
+  opacity: 0.3;
+  filter: grayscale(100%);
+}
+
+
 

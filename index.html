@@ -1,28 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>1 Gorila vs 100 Humanos</title>
-    <link rel="stylesheet" href="css/style.css"/>
-    <script src="js/script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gorila vs 100 Humanos</title>
+  <link rel="stylesheet" href="assets/css/style.css"/>
 </head>
 <body>
-    <header>
-        <h1>1 Gorila vs 100 Humanos</h1>
-    </header>
-    <section class="status-bar">
+  <header>
+    <h1>🦍 Gorila vs 100 Humanos</h1>
+  </header>
+
+  <section class="status-bar">
     <p>Vida do Gorila: <span id="vida-gorila">100</span></p>
     <p>Humanos restantes: <span id="humanos-restantes">100</span></p>
-    </section>
+  </section>
 
-    <section class="campo-de-batalha">
-        <img id="humanos" src="assets/humano.png" alt = "Humano"/>
-        <img id="gorila" src="assets/gorila.png" alt="Gorila" />   
-    </section>
+  <section class="battlefield">
+    <img id="gorila" src="assets/gorila.png" alt="Gorila" />
+    <div id="humanos" class="humanos-container"></div>
+  </section>
 
-    <section class="controls">
-        <button id="btn-atacar">Atacar</button>
-    </section>
+  <section class="controls">
+    <button id="btn-atacar">Atacar</button>
+  </section>
+
+  <section class="log-section">
+    <h2>Log da Batalha</h2>
+    <div id="log-batalha"></div>
+  </section>
+
+  <audio id="som-ataque" src="assets/som-ataque.mp3" preload="auto"></audio>
+  <audio id="som-mata-humano" src="assets/som-mata-humano.mp3" preload="auto"></audio>
+  <script src="assets/js/script.js"></script>
 </body>
 </html>
