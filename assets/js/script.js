@@ -13,11 +13,11 @@ const somCura = document.getElementById('som-cura');
 const somCriarArma = document.getElementById('som-criar-arma');
 
 function atacar() {
-  if (energiaGorila < 30) {
+  if (energiaGorila < 10) {
     logBatalha("O gorila está cansado demais para atacar!");
     return;
   }
-  energiaGorila -= 30;
+  energiaGorila -= 10;
 
   const gorila = document.getElementById('gorila');
   gorila.classList.add('ataque-gorila');
@@ -66,11 +66,11 @@ function atacar() {
 }
 
 function defender() {
-  if (energiaGorila < 20) {
+  if (energiaGorila < 5) {
     logBatalha("O gorila está cansado demais para defender!");
     return;
   }
-  energiaGorila -=20;
+  energiaGorila -=5;
   defendendo = true;
   logBatalha("O gorila está se defendendo e receberá menos dano no próximo turno!");
 
@@ -148,15 +148,16 @@ function iniciarAtaqueAutomatico() {
       humanosAtacam();
 
       const delay = 4000 + Math.random() * 5000;
-
       ataqueAutomatico = setTimeout(ataqueComDelay, delay);
     } else {
       clearTimeout(ataqueAutomatico);
     }
   }
 
-  ataqueComDelay();
+  const delayInicial = 4000 + Math.random() * 5000; 
+  ataqueAutomatico = setTimeout(ataqueComDelay, delayInicial);
 }
+
 
 function atualizarDOM() {
   document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
@@ -229,6 +230,8 @@ function verificarFimDeJogo() {
     clearInterval(descansando);
     descansandoAtivo = false;
     jogoEncerrado = true;
+  } else if (!descansandoAtivo) {
+    descansar();
   }
 }
 
@@ -256,7 +259,7 @@ function descansar() {
       descansandoAtivo = false;
       logBatalha("Energia do gorila está cheia. Descanso encerrado.");
     }
-  }, 4000);
+  }, 3500);
 }
 
 function reiniciarJogo() {
@@ -296,13 +299,13 @@ function bloquearAcoes(tempoMs) {
 }
 
 function podeAtivarBotoes() {
-  return vidaGorila > 0 && humanos.some(h => h.vivo);
+  return !jogoEncerrado && vidaGorila > 0 && humanos.some(h => h.vivo);
 }
 
 window.onload = () => {
   carregarEstado();
   atualizarDOM();
-  descansar();
+  verificarFimDeJogo();
 
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
@@ -310,7 +313,5 @@ window.onload = () => {
   document.getElementById('btn-reiniciar').addEventListener('click', reiniciarJogo);
 
   iniciarAtaqueAutomatico();
-  if (vidaGorila > 0) {
-    verificarFimDeJogo();
-  }
+  if (!jogoEncerrado) descansar();
 };
