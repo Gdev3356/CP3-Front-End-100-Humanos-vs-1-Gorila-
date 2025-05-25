@@ -38,6 +38,7 @@ header {
   filter: grayscale(100%);
 }
 
+
 #gorila.ataque-gorila {
   animation: gorilaAvancaVolta 0.4s ease forwards;
 }

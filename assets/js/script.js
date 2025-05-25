@@ -1,15 +1,14 @@
 let vidaGorila = 100;
-let humanos = Array.from({ length: 100 }, () => ({ vivo: true }));
+let humanos = Array.from({ length: 100 }, () => ({ vivo: true, armado: false }));
 let defendendo = false;
 let ataqueAutomatico;
 let curasRestantes = 4;
 const somAtaque = document.getElementById('som-ataque');
 const somMataHumano = document.getElementById('som-mata-humano');
 const somCura = document.getElementById('som-cura');
+const somCriarArma = document.getElementById('som-criar-arma');
 
 function atacar() {
-  somMataHumano.currentTime = 0;
-  somMataHumano.play();
 
   const gorila = document.getElementById('gorila');
   gorila.classList.add('ataque-gorila');
@@ -17,18 +16,32 @@ function atacar() {
 
   let mortos = 0;
   let esquivaram = 0;
+  const maxAlvos = 10;
   const vivos = humanos.filter(h => h.vivo);
-  const chanceBase = 0.3;
+  const chanceBase = 0.9;
   const chanceEsquiva = chanceBase * (vivos.length / 100);
 
-  vivos.forEach(h => {
+  const alvosSelecionados = shuffleArray(vivos).slice(0, maxAlvos);
+
+  alvosSelecionados.forEach(h => {
     if (Math.random() < chanceEsquiva) {
       esquivaram++;
-      return;
+    } else {
+      h.vivo = false;
+      mortos++;
+      somMataHumano.currentTime = 0;
+      somMataHumano.play();
     }
-    h.vivo = false;
-    mortos++;
   });
+
+function shuffleArray(array) {
+  const copia = [...array];
+  for (let i = copia.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copia[i], copia[j]] = [copia[j], copia[i]];
+  }
+  return copia;
+}
 
   logBatalha(`O gorila atacou! ${mortos} humanos foram eliminados. ${esquivaram} esquivaram!`);
   atualizarDOM();
@@ -55,20 +68,42 @@ function curar() {
   atualizarDOM();
 }
 
-function humanosAtacam() {
+function tentarCriarArmas() {
+  const humanosNaoArmados = humanos.filter(h => h.vivo && !h.armado);
   const vivos = humanos.filter(h => h.vivo).length;
-  if (vivos === 0) return;
 
-  const variacao = Math.random() * 0.2 + 0.9;
-  const danoBase = vivos * 0.3;
-  const danoComVariacao = Math.round(danoBase * variacao);
-  const danoFinal = defendendo ? Math.floor(danoComVariacao / 2) : danoComVariacao;
+  const chanceCriarArma = 1 - (vivos / 100);
+  humanosNaoArmados.forEach(h => {
+    if (Math.random() < chanceCriarArma * 0.1) {
+      h.armado = true;
+      somCriarArma.currentTime = 0;
+      somCriarArma.play();
+      logBatalha("Um humano improvisou uma arma!");
+    }
+  });
+}
+
+function humanosAtacam() {
+  const atacantes = humanos.filter(h => h.vivo);
+  if (atacantes.length === 0) return;
+
+  tentarCriarArmas();
+
+  let danoTotal = 0;
+
+  atacantes.forEach(h => {
+    const base = h.armado ? 0.6 : 0.3;
+    const variacao = Math.random() * 0.2 + 0.9;
+    danoTotal += base * variacao;
+  });
+
+  const danoFinal = defendendo ? Math.floor(danoTotal / 2) : Math.round(danoTotal);
   vidaGorila -= danoFinal;
   defendendo = false;
   somAtaque.currentTime = 0;
   somAtaque.play();
 
-  logBatalha(`${vivos} humanos atacaram e causaram ${danoFinal} de dano!`);
+  logBatalha(`${atacantes.length} humanos atacaram e causaram ${danoFinal} de dano!`);
   atualizarDOM();
   verificarFimDeJogo();
 }
@@ -94,6 +129,7 @@ function atualizarDOM() {
     const img = document.createElement('img');
     img.src = 'assets/humano.png';
     if (!h.vivo) img.classList.add('morto');
+    img.src = h.armado ? 'assets/humano-armado.png' : 'assets/humano.png';
     container.appendChild(img);
   });
 }
