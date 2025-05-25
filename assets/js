@@ -9,11 +9,26 @@ function atacar() {
       atacados--;
     }
   }
-
-  logBatalha("🦍 O gorila atacou e eliminou até 5 humanos!");
+  atualizarDOM();
+  logBatalha("O gorila atacou e eliminou até 5 humanos!");
 }
 
-  function logBatalha(mensagem) {
+function atualizarDOM() {
+  document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
+  document.getElementById('humanos-restantes').textContent = humanos.filter(h => h.vivo).length;
+
+  const container = document.getElementById('humanos');
+  container.innerHTML = '';
+  humanos.forEach(h => {
+    const div = document.createElement('div');
+    div.className = 'humano';
+    div.style.background = h.vivo ? 'red' : 'gray';
+    container.appendChild(div);
+  });
+}
+
+
+function logBatalha(mensagem) {
   const logDiv = document.getElementById('log-batalha');
   const novaMsg = document.createElement('p');
   novaMsg.textContent = mensagem;
