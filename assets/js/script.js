@@ -2,13 +2,21 @@ let vidaGorila = 100;
 let humanos = Array.from({ length: 100 }, () => ({ vivo: true, armado: false }));
 let defendendo = false;
 let ataqueAutomatico;
+let descansando = null;
+let descansandoAtivo = false;
 let curasRestantes = 4;
+let energiaGorila = 120;
 const somAtaque = document.getElementById('som-ataque');
 const somMataHumano = document.getElementById('som-mata-humano');
 const somCura = document.getElementById('som-cura');
 const somCriarArma = document.getElementById('som-criar-arma');
 
 function atacar() {
+  if (energiaGorila < 30) {
+    logBatalha("O gorila está cansado demais para atacar!");
+    return;
+  }
+  energiaGorila -= 30;
 
   const gorila = document.getElementById('gorila');
   gorila.classList.add('ataque-gorila');
@@ -33,24 +41,44 @@ function atacar() {
     }
   });
 
-function shuffleArray(array) {
-  const copia = [...array];
-  for (let i = copia.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copia[i], copia[j]] = [copia[j], copia[i]];
+  function shuffleArray(array) {
+    const copia = [...array];
+    for (let i = copia.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copia[i], copia[j]] = [copia[j], copia[i]];
+    }
+    return copia;
   }
-  return copia;
-}
+
+
+  if (descansandoAtivo) {
+    clearInterval(descansando);
+    descansandoAtivo = false;
+  }
 
   logBatalha(`O gorila atacou! ${mortos} humanos foram eliminados. ${esquivaram} esquivaram!`);
   atualizarDOM();
   salvarEstado();
   verificarFimDeJogo();
+
+  bloquearAcoes(2000);
 }
 
 function defender() {
+  if (energiaGorila < 20) {
+    logBatalha("O gorila está cansado demais para defender!");
+    return;
+  }
+  energiaGorila -=20;
   defendendo = true;
   logBatalha("O gorila está se defendendo e receberá menos dano no próximo turno!");
+
+  if (descansandoAtivo) {
+    clearInterval(descansando);
+    descansandoAtivo = false;
+  }
+
+  bloquearAcoes(2000);
 }
 
 function curar() {
@@ -62,11 +90,14 @@ function curar() {
   somCura.play();
   const cura = Math.floor(Math.random() * 15) + 5;
   vidaGorila = Math.min(vidaGorila + cura, 100);
+  energiaGorila += Math.min(vidaGorila + cura, 120);
   curasRestantes--;
 
   logBatalha(`O gorila se curou em ${cura} pontos de vida. (${curasRestantes} bananas restantes)`);
   salvarEstado();
   atualizarDOM();
+
+  bloquearAcoes(2000);
 }
 
 function tentarCriarArmas() {
@@ -115,7 +146,7 @@ function iniciarAtaqueAutomatico() {
     if (vidaGorila > 0 && humanos.some(h => h.vivo)) {
       humanosAtacam();
     } else {
-      clearInterval(attaqueAutomatico);
+      clearInterval(ataqueAutomatico);
     }
   }, 5000);
 }
@@ -124,6 +155,7 @@ function atualizarDOM() {
   document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
   document.getElementById('humanos-restantes').textContent = humanos.filter(h => h.vivo).length;
   document.getElementById('curas-restantes').textContent = curasRestantes;
+  document.getElementById('energia-gorila').textContent = energiaGorila;
 
   const container = document.getElementById('humanos');
   container.innerHTML = '';
@@ -147,20 +179,23 @@ function desativarBotoes() {
   document.getElementById('btn-atacar').disabled = true;
   document.getElementById('btn-defender').disabled = true;
   document.getElementById('btn-curar').disabled = true;
-  document.getElementById('btn-reiniciar').style.display = 'block';
 }
 
 function salvarEstado() {
   localStorage.setItem('vidaGorila', vidaGorila);
   localStorage.setItem('humanos', JSON.stringify(humanos));
+  localStorage.setItem('energiaGorila', energiaGorila);
 }
 
 function carregarEstado() {
   const vida = localStorage.getItem('vidaGorila');
   const dados = localStorage.getItem('humanos');
-  if (vida && dados) {
+  const energia = localStorage.getItem('energiaGorila');
+
+  if (vida && dados && energia) {
     vidaGorila = parseInt(vida);
     humanos = JSON.parse(dados);
+    energiaGorila = parseInt(energia);
   }
 }
 
@@ -172,17 +207,51 @@ function verificarFimDeJogo() {
     alert("Fim de jogo: os humanos venceram!");
     desativarBotoes();
     clearInterval(ataqueAutomatico);
+    clearInterval(descansando);
+    descansandoAtivo = false;
+    document.getElementById('btn-reiniciar').style.display = 'block';
   } else if (vivos === 0) {
     logBatalha("O gorila eliminou todos os humanos!");
     alert("Fim de jogo: o gorila venceu!");
     desativarBotoes();
     clearInterval(ataqueAutomatico);
+    clearInterval(descansando);
+    descansandoAtivo = false;
+    document.getElementById('btn-reiniciar').style.display = 'block';
   }
+}
+
+function descansar() {
+  if (descansandoAtivo || vidaGorila <= 0 || !humanos.some(h => h.vivo)) return;
+
+  descansandoAtivo = true;
+  logBatalha("O gorila está descansando para recuperar energia...");
+
+  descansando = setInterval(() => {
+    if (vidaGorila <= 0 || !humanos.some(h => h.vivo)) {
+      clearInterval(descansando);
+      descansandoAtivo = false;
+      return;
+    }
+
+    const recuperado = Math.min(120 - energiaGorila, 15);
+    energiaGorila += recuperado;
+    energiaGorila = Math.min(energiaGorila, 120); 
+    logBatalha(`O gorila recuperou ${recuperado} de energia.`);
+    atualizarDOM();
+
+    if (energiaGorila >= 120) {
+      clearInterval(descansando);
+      descansandoAtivo = false;
+      logBatalha("Energia do gorila está cheia. Descanso encerrado.");
+    }
+  }, 4000);
 }
 
 function reiniciarJogo() {
   vidaGorila = 100;
   curasRestantes = 4;
+  energiaGorila = 120;
   defendendo = false;
 
   humanos = Array.from({ length: 100 }, () => ({ vivo: true, armado: false }));
@@ -199,9 +268,22 @@ function reiniciarJogo() {
   iniciarAtaqueAutomatico();
 }
 
+function bloquearAcoes(tempoMs) {
+  const botoes = [
+    document.getElementById('btn-atacar'),
+    document.getElementById('btn-defender'),
+    document.getElementById('btn-curar'),
+  ];
+  botoes.forEach(botao => botao.disabled = true);
+  
+  setTimeout(() => {
+    botoes.forEach(botao => botao.disabled = false);
+  }, tempoMs);
+}
+
 window.onload = () => {
-  atualizarDOM();
   carregarEstado();
+  atualizarDOM();
 
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
@@ -209,4 +291,5 @@ window.onload = () => {
   document.getElementById('btn-reiniciar').addEventListener('click', reiniciarJogo);
 
   iniciarAtaqueAutomatico();
+  descansar();
 };
