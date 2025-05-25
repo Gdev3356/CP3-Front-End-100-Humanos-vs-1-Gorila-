@@ -2,8 +2,10 @@ let vidaGorila = 100;
 let humanos = Array.from({ length: 100 }, () => ({ vivo: true }));
 let defendendo = false;
 let ataqueAutomatico;
+let curasRestantes = 4;
 const somAtaque = document.getElementById('som-ataque');
 const somMataHumano = document.getElementById('som-mata-humano');
+const somCura = document.getElementById('som-cura');
 
 function atacar() {
   const gorila = document.getElementById('gorila');
@@ -31,9 +33,17 @@ function defender() {
 }
 
 function curar() {
+  if (curasRestantes <= 0) {
+    logBatalha("O gorila não possui mais bananas!");
+    return;
+  }
+  somCura.currentTime = 0;
+  somCura.play();
   const cura = Math.floor(Math.random() * 15) + 5;
   vidaGorila = Math.min(vidaGorila + cura, 100);
-  logBatalha(`O gorila se curou em ${cura} pontos de vida.`);
+  curasRestantes--;
+
+  logBatalha(`O gorila se curou em ${cura} pontos de vida. (${curasRestantes} bananas restantes)`);
   atualizarDOM();
   humanosAtacam();
 }
@@ -66,6 +76,7 @@ function iniciarAtaqueAutomatico() {
 function atualizarDOM() {
   document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
   document.getElementById('humanos-restantes').textContent = humanos.filter(h => h.vivo).length;
+  document.getElementById('curas-restantes').textContent = curasRestantes;
 
   const container = document.getElementById('humanos');
   container.innerHTML = '';
