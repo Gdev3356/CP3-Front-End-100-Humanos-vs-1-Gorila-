@@ -95,6 +95,27 @@ function logBatalha(mensagem) {
   logDiv.prepend(p);
 }
 
+function desativarBotoes() {
+  document.getElementById('btn-atacar').disabled = true;
+  document.getElementById('btn-defender').disabled = true;
+  document.getElementById('btn-curar').disabled = true;
+}
+
+function verificarFimDeJogo() {
+  const vivos = humanos.filter(h => h.vivo).length;
+
+  if (vidaGorila <= 0) {
+    logBatalha("O gorila foi derrotado!");
+    alert("Fim de jogo: os humanos venceram!");
+    desativarBotoes();
+    clearInterval(ataqueAutomatico);
+  } else if (vivos === 0) {
+    logBatalha("O gorila eliminou todos os humanos!");
+    alert("Fim de jogo: o gorila venceu!");
+    desativarBotoes();
+    clearInterval(ataqueAutomatico);
+  }
+}
 
 window.onload = () => {
   atualizarDOM();
