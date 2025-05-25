@@ -20,7 +20,6 @@ function atacar() {
   const vivos = humanos.filter(h => h.vivo);
   const chanceBase = 0.9;
   const chanceEsquiva = chanceBase * (vivos.length / 100);
-
   const alvosSelecionados = shuffleArray(vivos).slice(0, maxAlvos);
 
   alvosSelecionados.forEach(h => {
@@ -45,6 +44,7 @@ function shuffleArray(array) {
 
   logBatalha(`O gorila atacou! ${mortos} humanos foram eliminados. ${esquivaram} esquivaram!`);
   atualizarDOM();
+  salvarEstado();
   verificarFimDeJogo();
 }
 
@@ -65,6 +65,7 @@ function curar() {
   curasRestantes--;
 
   logBatalha(`O gorila se curou em ${cura} pontos de vida. (${curasRestantes} bananas restantes)`);
+  salvarEstado();
   atualizarDOM();
 }
 
@@ -105,6 +106,7 @@ function humanosAtacam() {
 
   logBatalha(`${atacantes.length} humanos atacaram e causaram ${danoFinal} de dano!`);
   atualizarDOM();
+  salvarEstado();
   verificarFimDeJogo();
 }
 
@@ -147,6 +149,20 @@ function desativarBotoes() {
   document.getElementById('btn-curar').disabled = true;
 }
 
+function salvarEstado() {
+  localStorage.setItem('vidaGorila', vidaGorila);
+  localStorage.setItem('humanos', JSON.stringify(humanos));
+}
+
+function carregarEstado() {
+  const vida = localStorage.getItem('vidaGorila');
+  const dados = localStorage.getItem('humanos');
+  if (vida && dados) {
+    vidaGorila = parseInt(vida);
+    humanos = JSON.parse(dados);
+  }
+}
+
 function verificarFimDeJogo() {
   const vivos = humanos.filter(h => h.vivo).length;
 
@@ -165,7 +181,8 @@ function verificarFimDeJogo() {
 
 window.onload = () => {
   atualizarDOM();
-
+  carregarEstado();
+  
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
   document.getElementById('btn-curar').addEventListener('click', curar);
