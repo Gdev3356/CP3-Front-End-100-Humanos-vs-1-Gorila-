@@ -1,6 +1,7 @@
 let vidaGorila = 100;
 let humanos = Array.from({ length: 100 }, () => ({ vivo: true }));
 let defendendo = false;
+let ataqueAutomatico;
 const somAtaque = document.getElementById('som-ataque');
 const somMataHumano = document.getElementById('som-mata-humano');
 
@@ -52,6 +53,16 @@ function humanosAtacam() {
   atualizarDOM();
 }
 
+function iniciarAtaqueAutomatico() {
+  ataqueAutomatico = setInterval(() => {
+    if (vidaGorila > 0 && humanos.some(h => h.vivo)) {
+      humanosAtacam();
+    } else {
+      clearInterval(attaqueAutomatico);
+    }
+  }, 5000);
+}
+
 function atualizarDOM() {
   document.getElementById('vida-gorila').textContent = Math.max(vidaGorila, 0);
   document.getElementById('humanos-restantes').textContent = humanos.filter(h => h.vivo).length;
@@ -79,4 +90,7 @@ window.onload = () => {
 
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
+  document.getElementById('btn-curar').addEventListener('click', curar);
+
+  iniciarAtaqueAutomatico();
 };
