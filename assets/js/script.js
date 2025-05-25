@@ -4,6 +4,7 @@ let defendendo = false;
 let ataqueAutomatico;
 let descansando = null;
 let descansandoAtivo = false;
+let jogoEncerrado = false;
 let curasRestantes = 4;
 let energiaGorila = 120;
 const somAtaque = document.getElementById('som-ataque');
@@ -209,6 +210,7 @@ function verificarFimDeJogo() {
     clearInterval(ataqueAutomatico);
     clearInterval(descansando);
     descansandoAtivo = false;
+    jogoEncerrado = true;
     document.getElementById('btn-reiniciar').style.display = 'block';
   } else if (vivos === 0) {
     logBatalha("O gorila eliminou todos os humanos!");
@@ -217,6 +219,7 @@ function verificarFimDeJogo() {
     clearInterval(ataqueAutomatico);
     clearInterval(descansando);
     descansandoAtivo = false;
+    jogoEncerrado = true;
     document.getElementById('btn-reiniciar').style.display = 'block';
   }
 }
@@ -253,6 +256,7 @@ function reiniciarJogo() {
   curasRestantes = 4;
   energiaGorila = 120;
   defendendo = false;
+  jogoEncerrado = false
 
   humanos = Array.from({ length: 100 }, () => ({ vivo: true, armado: false }));
 
@@ -275,9 +279,11 @@ function bloquearAcoes(tempoMs) {
     document.getElementById('btn-curar'),
   ];
   botoes.forEach(botao => botao.disabled = true);
-  
+
   setTimeout(() => {
-    botoes.forEach(botao => botao.disabled = false);
+    if (!jogoEncerrado) {
+      botoes.forEach(botao => botao.disabled = false);
+    }
   }, tempoMs);
 }
 
