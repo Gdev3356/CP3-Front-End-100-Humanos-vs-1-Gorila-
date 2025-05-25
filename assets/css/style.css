@@ -13,8 +13,6 @@ header {
   padding: 20px;
 }
 
-
-
 .battlefield {
   display: flex;
   justify-content: center;
@@ -44,10 +42,32 @@ header {
   animation: gorilaAvancaVolta 0.4s ease forwards;
 }
 
-@keyframes gorilaAvancaVolta {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(-50px); }
-  100% { transform: translateX(0); }
+.controls {
+  margin: 20px;
+}
+
+.controls button {
+  padding: 10px 20px;
+  margin: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.log-section {
+  margin: 20px auto;
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #ccc;
+  height: 200px;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.status-bar {
+  margin-top: 15px;
+  font-size: 1.2em;
 }
 
 footer{
@@ -63,3 +83,8 @@ footer{
     color: #eef2f1;
 }
 
+@keyframes gorilaAvancaVolta {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-50px); }
+  100% { transform: translateX(0); }
+}

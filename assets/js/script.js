@@ -24,6 +24,7 @@ function atacar() {
   logBatalha("O gorila atacou e eliminou até 5 humanos!");
   atualizarDOM();
   humanosAtacam();
+  verificarFimDeJogo();
 }
 
 function defender() {
@@ -61,6 +62,7 @@ function humanosAtacam() {
 
   logBatalha(`${vivos} humanos atacaram e causaram ${danoFinal} de dano!`);
   atualizarDOM();
+  verificarFimDeJogo();
 }
 
 function iniciarAtaqueAutomatico() {
