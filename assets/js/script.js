@@ -23,7 +23,12 @@ function atacar() {
   humanosAtacam();
 }
 
-
+function defender() {
+  defendendo = true;
+  logBatalha("O gorila está se defendendo e receberá menos dano no próximo turno!");
+  salvarEstado();
+  humanosAtacam();
+}
 
 function humanosAtacam() {
   const vivos = humanos.filter(h => h.vivo).length;
