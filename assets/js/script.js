@@ -29,6 +29,14 @@ function defender() {
   humanosAtacam();
 }
 
+function curar() {
+  const cura = Math.floor(Math.random() * 15) + 5;
+  vidaGorila = Math.min(vidaGorila + cura, 100);
+  logBatalha(`O gorila se curou em ${cura} pontos de vida.`);
+  atualizarDOM();
+  humanosAtacam();
+}
+
 function humanosAtacam() {
   const vivos = humanos.filter(h => h.vivo).length;
   if (vivos === 0) return;
