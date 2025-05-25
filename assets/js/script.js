@@ -62,7 +62,7 @@ function atacar() {
   salvarEstado();
   verificarFimDeJogo();
 
-  bloquearAcoes(1000);
+  bloquearAcoes(900);
 }
 
 function defender() {
@@ -79,7 +79,7 @@ function defender() {
     descansandoAtivo = false;
   }
 
-  bloquearAcoes(1000);
+  bloquearAcoes(900);
 }
 
 function curar() {
@@ -91,14 +91,14 @@ function curar() {
   somCura.play();
   const cura = Math.floor(Math.random() * 15) + 5;
   vidaGorila = Math.min(vidaGorila + cura, 100);
-  energiaGorila += Math.min(energiaGorila + cura, 120);
+  energiaGorila = Math.min(energiaGorila + cura, 120);
   curasRestantes--;
 
   logBatalha(`O gorila se curou em ${cura} pontos de vida. (${curasRestantes} bananas restantes)`);
   salvarEstado();
   atualizarDOM();
 
-  bloquearAcoes(1000);
+  bloquearAcoes(900);
 }
 
 function tentarCriarArmas() {
@@ -147,7 +147,7 @@ function iniciarAtaqueAutomatico() {
     if (vidaGorila > 0 && humanos.some(h => h.vivo)) {
       humanosAtacam();
 
-      const delay = 4000 + Math.random() * 3000;
+      const delay = 4000 + Math.random() * 5000;
 
       ataqueAutomatico = setTimeout(ataqueComDelay, delay);
     } else {
@@ -186,22 +186,26 @@ function desativarBotoes() {
   document.getElementById('btn-atacar').disabled = true;
   document.getElementById('btn-defender').disabled = true;
   document.getElementById('btn-curar').disabled = true;
+  document.getElementById('btn-reiniciar').style.display = 'block';
 }
 
 function salvarEstado() {
   localStorage.setItem('vidaGorila', vidaGorila);
   localStorage.setItem('humanos', JSON.stringify(humanos));
+  localStorage.setItem('curasRestantes', curasRestantes);
   localStorage.setItem('energiaGorila', energiaGorila);
 }
 
 function carregarEstado() {
   const vida = localStorage.getItem('vidaGorila');
   const dados = localStorage.getItem('humanos');
+  const curas = localStorage.getItem('curasRestantes');
   const energia = localStorage.getItem('energiaGorila');
 
-  if (vida && dados && energia) {
+  if (vida && dados && curas && energia) {
     vidaGorila = parseInt(vida);
     humanos = JSON.parse(dados);
+    curasRestantes = parseInt(curas);
     energiaGorila = parseInt(energia);
   }
 }
@@ -217,7 +221,6 @@ function verificarFimDeJogo() {
     clearInterval(descansando);
     descansandoAtivo = false;
     jogoEncerrado = true;
-    document.getElementById('btn-reiniciar').style.display = 'block';
   } else if (vivos === 0) {
     logBatalha("O gorila eliminou todos os humanos!");
     alert("Fim de jogo: o gorila venceu!");
@@ -226,7 +229,6 @@ function verificarFimDeJogo() {
     clearInterval(descansando);
     descansandoAtivo = false;
     jogoEncerrado = true;
-    document.getElementById('btn-reiniciar').style.display = 'block';
   }
 }
 
@@ -285,17 +287,22 @@ function bloquearAcoes(tempoMs) {
     document.getElementById('btn-curar'),
   ];
   botoes.forEach(botao => botao.disabled = true);
-
+  
   setTimeout(() => {
-    if (!jogoEncerrado) {
+    if (podeAtivarBotoes()) {
       botoes.forEach(botao => botao.disabled = false);
     }
   }, tempoMs);
 }
 
+function podeAtivarBotoes() {
+  return vidaGorila > 0 && humanos.some(h => h.vivo);
+}
+
 window.onload = () => {
   carregarEstado();
   atualizarDOM();
+  descansar();
 
   document.getElementById('btn-atacar').addEventListener('click', atacar);
   document.getElementById('btn-defender').addEventListener('click', defender);
@@ -303,5 +310,7 @@ window.onload = () => {
   document.getElementById('btn-reiniciar').addEventListener('click', reiniciarJogo);
 
   iniciarAtaqueAutomatico();
-  descansar();
+  if (vidaGorila > 0) {
+    verificarFimDeJogo();
+  }
 };
