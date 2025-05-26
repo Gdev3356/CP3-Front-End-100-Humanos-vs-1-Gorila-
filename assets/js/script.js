@@ -228,6 +228,10 @@ function verificarFimDeJogo() {
     clearInterval(descansando);
     descansandoAtivo = false;
     jogoEncerrado = true;
+    if (window.musicaAtiva) {
+      window.musicaAtiva.pause();
+      window.musicaAtiva.currentTime = 0;
+    }
   } else if (vivos === 0) {
     logBatalha("O gorila eliminou todos os humanos!");
     alert("Fim de jogo: o gorila venceu!");
@@ -236,6 +240,10 @@ function verificarFimDeJogo() {
     clearInterval(descansando);
     descansandoAtivo = false;
     jogoEncerrado = true;
+    if (window.musicaAtiva) {
+      window.musicaAtiva.pause();
+      window.musicaAtiva.currentTime = 0;
+    }
   } else if (!descansandoAtivo) {
     descansar();
   }
@@ -287,6 +295,10 @@ function reiniciarJogo() {
 
   clearInterval(ataqueAutomatico);
   iniciarAtaqueAutomatico();
+  if (window.musicaAtiva) {
+    window.musicaAtiva.currentTime = 0;
+    window.musicaAtiva.play();
+  }
 }
 
 function bloquearAcoes(tempoMs) {
@@ -320,4 +332,17 @@ window.onload = () => {
 
   iniciarAtaqueAutomatico();
   if (!jogoEncerrado) descansar();
+
+  const musicaPrincipal = document.getElementById('musica-fundo');
+  const musicaAlt = document.getElementById('musica-fundo-alt');
+
+  const tocarAlternativa = Math.random() < 0.2;
+  const musicaEscolhida = tocarAlternativa ? musicaAlt : musicaPrincipal;
+
+  musicaEscolhida.volume = 0.5;
+  musicaEscolhida.play().catch(e => {
+    console.log("Interação do usuário necessária para iniciar o áudio:", e);
+  });
+
+  window.musicaAtiva = musicaEscolhida;
 };
